@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.notifications.NotificationsFragment">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/error_msg"
+        android:text="NO Channel Added Yet"/>
+
+    <com.masum.iptv.ui.player.dtpv.DoubleTapPlayerView
+        android:id="@+id/video_view"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        app:dtpv_controller="@id/youtube_overlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:resize_mode="fill"
+        app:show_subtitle_button="false" />
+    <com.masum.iptv.ui.player.dtpv.youtube.YouTubeOverlay
+        android:id="@+id/youtube_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/video_view"
+        app:layout_constraintBottom_toBottomOf="@id/video_view"
+        app:layout_constraintStart_toStartOf="@id/video_view"
+        app:layout_constraintEnd_toEndOf="@id/video_view"
+        android:visibility="invisible"
+
+        app:yt_playerView="@+id/video_view" />
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@+id/video_view">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.nambimobile.widgets.efab.ExpandableFabLayout
+        android:id="@+id/expandableFabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:elevation="100dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.nambimobile.widgets.efab.ExpandableFab
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/ui_margin_medium"
+            android:layout_marginRight="@dimen/ui_margin_medium"
+            android:layout_marginBottom="@dimen/ui_margin_medium"
+            app:efab_orientation="portrait"
+            app:fabAnimateMenu="true" />
+
+        <com.nambimobile.widgets.efab.FabOption
+            android:id="@+id/file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_baseline_audio_file_24"
+            app:fab_orientation="portrait"
+            app:label_text="File" />
+
+        <com.nambimobile.widgets.efab.FabOption
+            android:id="@+id/link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_baseline_insert_link_24"
+            app:fab_orientation="portrait"
+            app:label_text="Link" />
+
+        <com.nambimobile.widgets.efab.ExpandableFab
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/ui_margin_medium"
+            android:layout_marginRight="@dimen/ui_margin_medium"
+            android:layout_marginBottom="@dimen/ui_margin_medium"
+            app:efab_orientation="landscape"
+            app:fabAnimateMenu="true" />
+
+        <com.nambimobile.widgets.efab.FabOption
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_baseline_add_24"
+            app:fab_orientation="landscape"
+            app:label_text="Option 1" />
+
+    </com.nambimobile.widgets.efab.ExpandableFabLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.FullScreenPlayerFragment">
+
+    <com.masum.iptv.ui.player.dtpv.DoubleTapPlayerView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:dtpv_controller="@id/youtube_overlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:resize_mode="fill"
+        app:show_subtitle_button="false" />
+    <com.masum.iptv.ui.player.dtpv.youtube.YouTubeOverlay
+        android:id="@+id/youtube_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/video_view"
+        app:layout_constraintBottom_toBottomOf="@id/video_view"
+        app:layout_constraintStart_toStartOf="@id/video_view"
+        app:layout_constraintEnd_toEndOf="@id/video_view"
+        android:visibility="invisible"
+
+        app:yt_playerView="@+id/video_view" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

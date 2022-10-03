@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name" translatable="false">Pixel Streamz</string>
+    <string name="title_home" translatable="false">Home</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
+    <string name="retry">Retry</string>
+    <string name="video_orientation_video">Video</string>
+    <string name="video_orientation_sensor">Sensor</string>
+    <string name="title_activity_test" translatable="false">TestActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="video_resize_crop">Resize Crop</string>
+    <string name="video_resize_fit">Resize Fit</string>
+    <string name="exo_controls_play_description">Play</string>
+    <string name="track_selection_title">Select Quality</string>
+    <string name="exo_track_selection_title_video">Video</string>
+    <string name="exo_track_selection_title_audio">Audio</string>
+    <string name="exo_track_selection_title_text">Text</string>
+    <string name="title_dialog">Select Quality</string>
+    <string name="error_details" translatable="false">Error Details</string>
+    <string name="exo_controls_pause_description">PLay</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="label_custom_color">custom cikir</string>
+    <string name="lorem_ipsum">lorem</string>
+    <string name="label_replace_action">repalce action</string>
+    <string name="label_remove_action">remove action</string>
+    <string name="label_add_action">add actrion</string>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.3.0" type="baseline" client="gradle" dependencies="false" name="AGP (7.3.0)" variant="fatal" version="7.3.0">
+
+    <issue
+        id="NotSibling"
+        message="`@+id/exo_progress` is not a sibling in the same `ConstraintLayout`"
+        errorLine1="            app:layout_constraintBottom_toTopOf=&quot;@+id/exo_progress&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/exo_styled_player_control_view.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+</issues>
