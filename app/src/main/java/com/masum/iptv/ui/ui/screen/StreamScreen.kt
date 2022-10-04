@@ -341,7 +341,7 @@ private fun textBox(text: MutableState<String>, hint: String) {
         }
     }
 
-    OutlinedTextField(
+    androidx.compose.material3.OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(0.dp, 0.dp, 0.dp, 5.dp),

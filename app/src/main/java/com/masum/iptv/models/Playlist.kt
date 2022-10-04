@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 data class Playlist(
     @PrimaryKey(autoGenerate = true)
     val id:Int,
-    val location:String,
-    val title:String,
+    var location:String,
+    var title:String,
     val isURL:Boolean,
+    val lastModified:Long
 )

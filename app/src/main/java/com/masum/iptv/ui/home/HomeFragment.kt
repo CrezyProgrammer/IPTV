@@ -278,9 +278,9 @@ class HomeFragment : Fragment() {
 
           override fun onDownloadSuccess() {
               dialog?.dismiss()
-              val list= ParseLocalFile(targetFile.absolutePath)
+          //   val list= ParseLocalFile(targetFile.absolutePath)
 
-              insertList(list)
+          //    insertList(list)
 
 
           }
@@ -312,7 +312,7 @@ class HomeFragment : Fragment() {
               writer.close()
               val list= ParseLocalFile(targetFile.absolutePath)
 
-              insertList(list)
+          //    insertList(list)
 
               dialog?.dismiss()
           },
@@ -362,7 +362,7 @@ class HomeFragment : Fragment() {
                 if (resultCode == Activity.RESULT_OK) {
                     val list = FilePickerManager.obtainData()
                    val channelList= ParseLocalFile(list[0])
-                    insertList(channelList)
+                  //  insertList(channelList)
                     getCategoryList()
                     // do your work
                 } else {

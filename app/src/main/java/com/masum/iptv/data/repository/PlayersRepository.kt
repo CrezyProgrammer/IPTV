@@ -21,6 +21,8 @@ class PlayersRepository @Inject constructor(
     fun getAllRecords(query:String): PagingSource<Int, Channel> {
         return db.channelDao.getAllChannels(query )
     }
+    suspend fun deletePlaylist(playlist: Playlist)=db.playlist.deletePlaylist(playlist)
+    suspend fun updatePlaylist(playlist: Playlist)=db.playlist.updatePlaylist(playlist)
     private val pagingSourceFactory = { db.channelDao.getAllChannels("")}
      fun  getCategoryList()=db.channelDao.getCategoryList()
     fun getPlaylist()=db.playlist.getPlayList()

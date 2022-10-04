@@ -9,7 +9,7 @@ import java.io.File
 import java.io.IOException
 import kotlin.random.Random
 
-fun ParseLocalFile(link:String):List<Channel> {
+ fun ParseLocalFile(link:String):List<Channel> {
     val fileEntries: List<M3uEntry> = M3uParser.parse(link)
     Log.i("123321", "ParseLocalFile: $fileEntries")
     val resolvedEntries: List<M3uEntry> = M3uParser.resolveNestedPlaylists(fileEntries)

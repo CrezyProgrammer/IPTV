@@ -1,28 +1,24 @@
 package com.masum.iptv.ui.ui.screen
 
-import android.content.Context
-import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -30,37 +26,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.leinardi.android.speeddial.compose.FabWithLabel
 import com.leinardi.android.speeddial.compose.SpeedDial
-import com.leinardi.android.speeddial.compose.SpeedDialOverlay
 import com.leinardi.android.speeddial.compose.SpeedDialState
 import com.masum.iptv.R
 import com.masum.iptv.models.Playlist
+import com.masum.iptv.ui.BottomNavItem
 import com.masum.iptv.ui.ui.theme.*
 import com.masum.iptv.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import me.rosuh.filepicker.bean.FileItemBeanImpl
+import me.rosuh.filepicker.config.AbstractFileFilter
+import me.rosuh.filepicker.config.FilePickerManager
+import me.rosuh.filepicker.filetype.AudioFileType
+import okio.ByteString.Companion.encode
+import okio.ByteString.Companion.encodeUtf8
+import java.net.URLEncoder
+import java.util.ArrayList
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel= viewModel()) {
+fun HomeScreen(mainViewModel: MainViewModel = viewModel(),  onClick: (String) -> Unit) {
+
     val speedDialState = rememberSaveable { mutableStateOf(SpeedDialState.Collapsed) }
     val speedDialVisible = rememberSaveable { mutableStateOf(true) }
     val reverseAnimationOnClose = rememberSaveable { mutableStateOf(false) }
     val overlayVisible = rememberSaveable { mutableStateOf(speedDialState.value.isExpanded()) }
     val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
-    
+
+
+
 
     isShowDialog= remember { mutableStateOf(false)}
    isUrlDialog= remember { mutableStateOf(true)}
     viewModel=mainViewModel
+    click = onClick
 
 
     Scaffold(
@@ -93,12 +99,14 @@ fun HomeScreen(mainViewModel: MainViewModel= viewModel()) {
                 reverseAnimationOnClose,
             )
         },
-    ) { scaffoldPadding -> ScaffoldContent(scaffoldPadding, overlayVisible, speedDialState) }
+    ) { scaffoldPadding -> ScaffoldContent(scaffoldPadding) }
 }
 
 lateinit var isShowDialog : MutableState<Boolean>
 lateinit var viewModel: MainViewModel
 lateinit var isUrlDialog : MutableState<Boolean>
+var click: ((String) -> Unit?)? =null
+
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
 private fun FloatingActionButton(
@@ -118,13 +126,11 @@ private fun FloatingActionButton(
         enter = scaleIn(),
         exit = scaleOut(),
     ) {
-        val context = LocalContext.current
         SpeedDial(
             state = speedDialState.value,
             onFabClick = { expanded ->
                 closeSpeedDial(overlayVisible, speedDialState)
                 if (expanded) {
-                    showToast(context, "ItemCallback")
                 }
             },
 
@@ -159,10 +165,17 @@ private fun FloatingActionButton(
                 }
             }
             item {
+                val context=LocalContext.current as ComponentActivity
                 FabWithLabel(
                     onClick = {
                        closeSpeedDial(overlayVisible, speedDialState)
-                        isUrlDialog.value = false
+                        FilePickerManager
+                            .from(context)
+
+                            .filter(fileFilter)
+
+                            .enableSingleChoice()
+                            .forResult(FilePickerManager.REQUEST_CODE)
 
                     },
                     labelContent = {
@@ -193,7 +206,7 @@ private fun FloatingActionButton(
 fun ShowDialog(openDialog: MutableState<Boolean>) {
     if (openDialog.value) {
         val coroutineScope = rememberCoroutineScope()
-        val playlist = remember { mutableStateOf("") }
+        val playlistValue = remember { mutableStateOf("") }
         val url = remember { mutableStateOf("") }
 
         androidx.compose.material3.AlertDialog(
@@ -213,9 +226,9 @@ fun ShowDialog(openDialog: MutableState<Boolean>) {
                     androidx.compose.material3.TextField(
                         modifier = Modifier.padding(5.dp),
                         label = {Text( "Enter Playlist name") },
-                        value = playlist.value,
+                        value = playlistValue.value,
                         onValueChange = {
-                            playlist.value = it
+                            playlistValue.value = it
 
                         }
                     )
@@ -241,7 +254,7 @@ fun ShowDialog(openDialog: MutableState<Boolean>) {
 
                 androidx.compose.material3.TextButton(onClick = {
                     openDialog.value = false
-                    val playlist=Playlist(0,url.value,playlist.value, isUrlDialog.value)
+                    val playlist=Playlist(0,url.value,playlistValue.value, isUrlDialog.value,System.currentTimeMillis())
                     coroutineScope.launch {
                         viewModel.insertPlaylist(playlist)
                     }
@@ -256,18 +269,17 @@ fun ShowDialog(openDialog: MutableState<Boolean>) {
 }
 
 @Composable
-private fun ScaffoldContent(
-    scaffoldPadding: PaddingValues,
-    overlayVisible: MutableState<Boolean>,
-    speedDialState: MutableState<SpeedDialState>,
-) {
+private fun ScaffoldContent(scaffoldPadding: PaddingValues) {
     val playlist by viewModel.getPlaylist().observeAsState(listOf())
 
 
-    val coroutineScope = rememberCoroutineScope()
+
     LazyColumn( ) {
      items(playlist){item ->
-         ListItem(item.title)
+         ListItem(playlist = item,
+             onClick = {
+                 click?.let { it1 -> it1(URLEncoder.encode(it.location,"utf-8")) }
+         })
 
      }
     }
@@ -282,34 +294,139 @@ private fun closeSpeedDial(
     overlayVisible.value = speedDialState.value.isExpanded()
 }
 
-private fun showToast(context: Context, text: String) {
-    Toast.makeText(context, text, Toast.LENGTH_LONG).show()
-}
+
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun ListItem(title: String="Test",description: String="Test description long line multple line content://com.android.externalstorage.documents/document/primary%3Atest.m3u") {
+fun ListItem(
+    playlist: Playlist = Playlist(
+        id = 0,
+        title = "Test",
+        location = "Test description long line multple line content://com.android.externalstorage.documents/document/primary%3Atest.m3u",
+        isURL = true,
+        lastModified = System.currentTimeMillis()
+    ),
+    onClick: (Playlist)-> Unit
+
+) {
 
     ElevatedCard(
+        onClick={
+            onClick(playlist)
+        },
         modifier =
         Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom=8.dp,start=16.dp,end=16.dp),
+            .padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 16.dp),
     ) {
+        val openDialog = remember { mutableStateOf(false) }
+        val urlValue= remember { mutableStateOf(playlist.title) }
+        val locationValue= remember { mutableStateOf(playlist.location) }
+        val coroutineScope = rememberCoroutineScope()
         Column(Modifier.padding(8.dp)) {
-            Text(text = title, fontWeight = FontWeight.Bold)
+            Text(text = playlist.title, fontWeight = FontWeight.Bold)
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
+
+
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text =description,
+                    text =playlist.location,
                     fontSize = 13.sp,
                     color = Color.DarkGray)
-                Icon(Icons.Default.Edit, contentDescription ="Edit", tint = Color.Black )
+                Icon(Icons.Default.Edit, contentDescription ="Edit", tint = Color.Black,
+                    modifier = Modifier.clickable {
+                       openDialog.value =true
+                    })
+                if(openDialog.value){
+                    if(openDialog.value){
+                        androidx.compose.material3.AlertDialog(
+                            onDismissRequest = {
+                                openDialog.value = false
+                            },
+                            title = {
+                                androidx.compose.material3.Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    text = "Enter Playlist details")
+                            },
+
+
+                            text = {
+                                Column() {
+                                    OutlinedTextField(
+                                        modifier = Modifier.padding(5.dp),
+                                        label = {Text( "Enter Playlist name") },
+                                        value = urlValue.value,
+                                        onValueChange = {
+                                            urlValue.value = it
+
+                                        }
+                                    )
+                                    OutlinedTextField(
+                                        modifier = Modifier.padding(5.dp),
+                                        label = {Text( "Enter Playlist url") },
+                                        value = locationValue.value,
+                                        onValueChange = {
+                                            locationValue.value = it
+
+                                        }
+                                    )
+                                }
+                            },
+
+                            confirmButton = {
+
+                                Row(modifier = Modifier
+                                    .fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween) {
+                                    androidx.compose.material3.TextButton(onClick = {
+                                        openDialog.value = false
+
+
+
+                                    })
+                                    { androidx.compose.material3.Text(text = "Cancel")
+                                    }
+                                    androidx.compose.material3.TextButton(onClick = {
+                                        openDialog.value = false
+
+                                        coroutineScope.launch {
+                                            viewModel.deletePlaylist(playlist)
+                                        }
+
+                                    })
+                                    { androidx.compose.material3.Text(text = "Delete")
+                                    }
+                                    androidx.compose.material3.TextButton(onClick = {
+                                        openDialog.value = false
+
+                                        coroutineScope.launch {
+                                            val newPlaylist =    Playlist(
+                                                playlist.id,
+                                                locationValue.value,
+                                                urlValue.value,
+                                                playlist.isURL,
+                                                System.currentTimeMillis()
+                                            )
+
+                                            viewModel.updatePlaylist(
+                                            newPlaylist
+                                            )
+                                        }
+
+                                    })
+                                    { androidx.compose.material3.Text(text = "Update")
+                                    }
+                                }
+
+                            })
+                    }
+
+                }
 
             }
         }
@@ -318,8 +435,30 @@ fun ListItem(title: String="Test",description: String="Test description long lin
     }
 
 
-    
+
+
+
 }
+
+val fileFilter = object : AbstractFileFilter() {
+    override fun doFilter(listData: ArrayList<FileItemBeanImpl>): ArrayList<FileItemBeanImpl> {
+        val iterator = listData.iterator()
+        while (iterator.hasNext()) {
+            val item = iterator.next()
+            // 如果是文件夹则略过
+            if (item.isDir) continue
+            // 判断文件类型是否是图片
+            if (item.fileType !is AudioFileType) {
+                iterator.remove()
+            }
+        }
+
+
+        return listData
+    }
+}
+
+
 
 
 

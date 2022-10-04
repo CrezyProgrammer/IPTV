@@ -38,8 +38,10 @@ class MainViewModel @Inject constructor(
     }
     fun getPlaylist()=repository.getPlaylist()
 
-    suspend fun getCategoryList()=repository.getCategoryList()
+    fun getCategoryList()=repository.getCategoryList()
+    suspend fun deletePlaylist(playlist: Playlist)=repository.deletePlaylist(playlist)
     suspend fun insertPlaylist(playlist: Playlist)=repository.insertPlaylist(playlist)
+    suspend fun updatePlaylist(playlist: Playlist)=repository.updatePlaylist(playlist)
     suspend fun insertList(list: List<Channel>) {
 repository.insertList(list)
     }

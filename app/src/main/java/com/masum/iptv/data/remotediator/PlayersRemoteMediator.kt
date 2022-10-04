@@ -55,7 +55,7 @@ class PlayersRemoteMediator(
                         isEndReached = endOfPaginationReached
                     )
                 )
-                db.channelDao.insertMultipleChannels(playersList)
+             //   db.channelDao.insertMultipleChannels(playersList)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: IOException) {
