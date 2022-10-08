@@ -9,7 +9,7 @@ import java.io.File
 import java.io.IOException
 import kotlin.random.Random
 
- fun ParseLocalFile(link:String):List<Channel> {
+ fun ParseLocalFile(link: String, id: Int):List<Channel> {
     val fileEntries: List<M3uEntry> = M3uParser.parse(link)
     Log.i("123321", "ParseLocalFile: $fileEntries")
     val resolvedEntries: List<M3uEntry> = M3uParser.resolveNestedPlaylists(fileEntries)
@@ -20,7 +20,8 @@ import kotlin.random.Random
         it.location.url.toString(),
             it.title.toString(),
             it.metadata["group-title"]?:"Unknown",
-            it.metadata["tvg-logo"]?:"https://upload.wikimedia.org/wikipedia/en/4/45/BabyTV.png"
+            it.metadata["tvg-logo"]?:"https://upload.wikimedia.org/wikipedia/en/4/45/BabyTV.png",
+            id
         )
         list.add(channel)
     }

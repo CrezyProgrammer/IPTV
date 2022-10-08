@@ -217,7 +217,7 @@ class HomeFragment : Fragment() {
 
     private fun getCategoryList() {
         lifecycleScope.launch {
-            viewModel.getCategoryList().observe(viewLifecycleOwner) { it ->
+            viewModel.getCategoryList(0).observe(viewLifecycleOwner) { it ->
                 if(it.isNotEmpty())binding.chipGroup.addView(createTagChip("All"))
                 it.forEach {
                 binding.chipGroup.addView(createTagChip(it))
@@ -248,83 +248,7 @@ class HomeFragment : Fragment() {
                 show()
             }
 
-        val targetFile = File(requireContext().cacheDir, "${System.currentTimeMillis()}.m3u")
-  if(url.contains("m3u")){
-      val downloadManager = DownloadService.getDownloadManager(requireActivity())
 
-      val downloadInfo = DownloadInfo.Builder().setUrl(url)
-          .setPath(targetFile.absolutePath)
-          .build()
-
-//set download callback.
-
-//set download callback.
-      downloadInfo!!.downloadListener = object : DownloadListener {
-          override fun onStart() {
-
-          }
-
-          override fun onWaited() {
-          }
-
-          override fun onPaused() {
-          }
-
-          override fun onDownloading(progress: Long, size: Long) {
-          }
-
-          override fun onRemoved() {
-          }
-
-          override fun onDownloadSuccess() {
-              dialog?.dismiss()
-          //   val list= ParseLocalFile(targetFile.absolutePath)
-
-          //    insertList(list)
-
-
-          }
-
-          override fun onDownloadFailed(e: DownloadException) {
-              Log.i("123321", "onDownloadFailed: ${e.code}")
-              dialog?.dismiss()
-              Toast.makeText(requireActivity(), "Download failed", Toast.LENGTH_SHORT).show()
-          }
-      }
-
-//submit download info to download manager.
-
-//submit download info to download manager.
-      downloadManager.download(downloadInfo)
-
-  }
-        else{
-      val queue: RequestQueue = Volley.newRequestQueue(requireActivity())
-
-      val stringRequest = StringRequest(
-          Request.Method.GET,
-          url, {
-              Log.i("123321", "playlistDownloader: response :$it")
-
-              val writer = FileWriter(targetFile)
-              writer.append(it)
-              writer.flush()
-              writer.close()
-              val list= ParseLocalFile(targetFile.absolutePath)
-
-          //    insertList(list)
-
-              dialog?.dismiss()
-          },
-          {
-              it.printStackTrace()
-              Log.i("123321", "playlistDownloader: error:${it.message}")
-
-              dialog?.dismiss()
-              Toast.makeText(requireActivity(), "Download failed", Toast.LENGTH_SHORT).show()
-          })
-      queue.add(stringRequest)
-  }
 
     }
 
@@ -361,7 +285,7 @@ class HomeFragment : Fragment() {
             FilePickerManager.REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val list = FilePickerManager.obtainData()
-                   val channelList= ParseLocalFile(list[0])
+                   val channelList= ParseLocalFile(list[0], id!!)
                   //  insertList(channelList)
                     getCategoryList()
                     // do your work
@@ -375,14 +299,7 @@ class HomeFragment : Fragment() {
     private fun startSearchJob(query: String="") {
         binding.progressBar.isVisible = true
         searchJob?.cancel()
-        searchJob = lifecycleScope.launch {
-            viewModel.getAllRecords(query)
-                .collectLatest {
 
-
-                    adapter.submitData(it)
-                }
-        }
   }
     private fun snackBarClickedPlayer(name: String) {
         player?.pause()

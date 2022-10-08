@@ -1,14 +1,8 @@
 package com.masum.iptv.data.repository
 
-import android.content.Context
-import androidx.paging.*
 import com.masum.iptv.data.db.AppDataBase
-import com.masum.iptv.data.remotediator.PlayersRemoteMediator
 import com.masum.iptv.models.Channel
-import com.masum.iptv.models.DataType
 import com.masum.iptv.models.Playlist
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,13 +12,14 @@ class PlayersRepository @Inject constructor(
 
 ) {
 
-    fun getAllRecords(query:String): PagingSource<Int, Channel> {
-        return db.channelDao.getAllChannels(query )
+    fun getAllRecords(query: String, id: Int)= db.channelDao.getAllChannels(query,id )
+
+    suspend fun deletePlaylist(playlist: Playlist) {
+        db.channelDao.deleteCategoryList(playlist.id)
+        db.playlist.deletePlaylist(playlist)
     }
-    suspend fun deletePlaylist(playlist: Playlist)=db.playlist.deletePlaylist(playlist)
     suspend fun updatePlaylist(playlist: Playlist)=db.playlist.updatePlaylist(playlist)
-    private val pagingSourceFactory = { db.channelDao.getAllChannels("")}
-     fun  getCategoryList()=db.channelDao.getCategoryList()
+     fun  getCategoryList(id: Int) =db.channelDao.getCategoryList(id=id)
     fun getPlaylist()=db.playlist.getPlayList()
     suspend fun insertList(list: List<Channel>)=db.channelDao.insertMultipleChannels(list)
     suspend fun insertPlaylist(playlist: Playlist)=db.playlist.insertPlaylist(playlist)
@@ -32,21 +27,6 @@ class PlayersRepository @Inject constructor(
     /**
      * for caching
      */
-    @ExperimentalPagingApi
-    fun getPlayers(dataType: DataType,  context: Context): Flow<PagingData<Channel>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                enablePlaceholders = false
-            ),
-            remoteMediator = PlayersRemoteMediator(
-                dataType,
-                context,
-                db
-            ),
-            pagingSourceFactory = pagingSourceFactory
-        ).flow //can also return livedata
-    }
     /**
      * Use this if you dont want to cache data to room
      */

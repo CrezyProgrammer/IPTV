@@ -24,35 +24,37 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.masum.iptv.R
 import com.masum.iptv.ui.VideoPlayerActivity
-import com.masum.iptv.ui.home.ui.theme.IPTVTheme
 import com.masum.iptv.utils.*
+import kotlinx.coroutines.launch
 
 @Composable
-@Preview
 @OptIn(ExperimentalMaterial3Api::class)
- fun StreamScreen() {
+ fun StreamScreen(drawerState: DrawerState) {
 
 val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Scaffold(
+
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
-            androidx.compose.material3.TopAppBar(
+            TopAppBar(
                 title = {
-                    androidx.compose.material.Text(
-                        "Simple TopAppBar",
+                    Text(
+                        "Network Stream",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 },
                 navigationIcon = {
-                    androidx.compose.material.IconButton(onClick = { /* doSomething() */ }) {
+                    androidx.compose.material.IconButton(onClick = {
+                        scope.launch { drawerState.open()}
+                    }) {
                         androidx.compose.material.Icon(
                             imageVector = Icons.Filled.Menu,
                             contentDescription = "Localized description"
@@ -64,6 +66,9 @@ val context = LocalContext.current
 
         floatingActionButton = {
             ExtendedFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White,
+
                 text = { Text("Play") },
                 icon = { Icon(Icons.Filled.PlayArrow, "") },
                 onClick = {
@@ -83,7 +88,7 @@ val context = LocalContext.current
                         USER_AGENT,userAgent.value)
                     videoIntent.putExtra(SCHEME,scheme.value)
 
-                     context.startActivity(videoIntent)
+                     if(url.value.isNotEmpty())context.startActivity(videoIntent)
 
 
 
@@ -126,13 +131,8 @@ var url_value=""
 fun editText() {
     val context = LocalContext.current
 
-    IPTVTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        )
-        {
+
+
             val preference=context.getSharedPreferences("configuration", Context.MODE_PRIVATE)
 
             url = remember { mutableStateOf(url_value) }
@@ -187,8 +187,8 @@ fun editText() {
             }
         }
 
-    }
-}
+
+
 lateinit var drmSchemeSelectedText : MutableState<String>
 
 
@@ -341,7 +341,8 @@ private fun textBox(text: MutableState<String>, hint: String) {
         }
     }
 
-    androidx.compose.material3.OutlinedTextField(
+    OutlinedTextField(
+        singleLine = true,
         modifier = Modifier
             .fillMaxWidth()
             .padding(0.dp, 0.dp, 0.dp, 5.dp),

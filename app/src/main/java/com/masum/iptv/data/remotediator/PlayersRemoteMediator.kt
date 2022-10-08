@@ -42,7 +42,7 @@ class PlayersRemoteMediator(
 
             val page: Int = key?.nextKey ?: 1
 
-            val playersList = ParseLocalFile("" )
+         //   val playersList = ParseLocalFile("", id!!)
 
             val endOfPaginationReached =true
             db.withTransaction {

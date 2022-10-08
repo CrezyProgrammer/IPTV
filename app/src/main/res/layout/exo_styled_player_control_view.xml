@@ -11,9 +11,18 @@
       android:background="#66000000"
       android:layoutDirection="ltr">
 
+    <ImageView
+        android:id="@+id/unlock_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        app:srcCompat="@drawable/ic_lock_24dp" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
       <TextView
           android:id="@+id/exo_position"
@@ -43,14 +52,17 @@
           android:layout_marginBottom="24dp"
           app:bar_gravity="bottom"
           app:bar_height="@dimen/exo_styled_progress_bar_height"
-          app:buffered_color="#FFFFFF"
+          app:buffered_color="#2196F3"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toStartOf="@+id/exo_duration"
           app:layout_constraintStart_toEndOf="@+id/exo_position"
+          app:played_ad_marker_color="#FF5722"
           app:played_color="#FF0000"
+          app:scrubber_color="#FFEB3B"
           app:scrubber_dragged_size="@dimen/exo_styled_progress_dragged_thumb_size"
           app:scrubber_enabled_size="@dimen/exo_styled_progress_enabled_thumb_size"
-          app:touch_target_height="@dimen/exo_styled_progress_touch_target_height" />
+          app:touch_target_height="@dimen/exo_styled_progress_touch_target_height"
+          app:unplayed_color="#E91E63" />
 
       <androidx.constraintlayout.widget.ConstraintLayout
           android:id="@+id/exo_bottom_bar"
@@ -161,6 +173,7 @@
             style="@style/ExoStyledControls.Button.Bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:padding="8dp"
             app:srcCompat="@drawable/ic_picture_in_picture_alt_24dp" />
 

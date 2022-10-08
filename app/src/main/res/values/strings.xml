@@ -20,9 +20,9 @@
     <string name="error_details" translatable="false">Error Details</string>
     <string name="exo_controls_pause_description">PLay</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="label_custom_color">custom cikir</string>
+    <string name="label_custom_color">Pick File</string>
     <string name="lorem_ipsum">lorem</string>
     <string name="label_replace_action">repalce action</string>
     <string name="label_remove_action">remove action</string>
-    <string name="label_add_action">add actrion</string>
+    <string name="label_add_action">Add Url</string>
 </resources>

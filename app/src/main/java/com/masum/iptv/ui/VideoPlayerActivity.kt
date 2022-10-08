@@ -23,12 +23,14 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.webkit.*
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import com.ghdsports.india.ui.player.CustomDefaultTrackNameProvider
 import com.ghdsports.india.ui.player.Prefs
 import com.google.android.exoplayer2.*
@@ -244,7 +246,7 @@ class VideoPlayerActivity : AppCompatActivity() {
                 REQUEST_PLAY
             )
             buttonPiP = playerView!!.findViewById(R.id.pip_icon)
-            buttonPiP?.setOnClickListener { view: View? ->
+            buttonPiP?.setOnClickListener {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                     enterPiP()
 
@@ -323,39 +325,36 @@ class VideoPlayerActivity : AppCompatActivity() {
         }
 
         val lock=playerView?.findViewById<ImageView>(R.id.lock_icon)
+        val unlock=playerView?.findViewById<ImageView>(R.id.unlock_icon)
+        val mainControl=playerView?.findViewById<ConstraintLayout>(R.id.main_layout)
+
         lock?.setOnClickListener {
-            if (locked || player != null && player!!.isPlaying) {
-                locked = !locked
+
+                locked = true
 
                 showText(playerView, "Locked", CustomStyledPlayerView.MESSAGE_TIMEOUT_LONG)
+                    unlock?.isVisible=locked
+                    mainControl?.isVisible=!locked
 
-                if (locked && controllerVisible) {
-                    playerView?.hideController()
-                }
+
+
             }
+        unlock?.setOnClickListener {
+
+            locked = false
+
+            showText(playerView, "Unlocked", CustomStyledPlayerView.MESSAGE_TIMEOUT_LONG)
+            unlock?.isVisible=locked
+            mainControl?.isVisible=!locked
+
+
+
         }
 
 
-        val exoQuality =  playerView?.findViewById<ImageButton>(R.id.exo_quality)/*
-        val exoFfwd =  playerView?.findViewById<ImageButton>(R.id.ffwd)
-        val exoRew =  playerView?.findViewById<ImageButton>(R.id.rew)
 
-        exoRew?.setOnClickListener {
-            try {
-                player?.seekTo(player!!.currentPosition - 5000) // 10000 = 10 Seconds
-            } catch (e: java.lang.Exception) {
-                Toast.makeText(this, "Error : $e", Toast.LENGTH_SHORT).show()
-            }
-        }
-  exoFfwd?.setOnClickListener {
-            try {
-                player?.seekTo(player!!.currentPosition + 5000) // 10000 = 10 Seconds
-            } catch (e: java.lang.Exception) {
-                Toast.makeText(this, "Error : $e", Toast.LENGTH_SHORT).show()
-            }
-        }
-*/
 
+        val exoQuality =  playerView?.findViewById<ImageButton>(R.id.exo_quality)
 
         val fullscreenBtn=playerView?.findViewById<ImageView>(R.id.fullscreen_button)
         fullscreenBtn?.setOnClickListener {
@@ -399,6 +398,16 @@ val v=player!!.currentTracks
 
         }
 
+        val root=playerView?.findViewById(R.id.exo_controls_background) as FrameLayout
+        root.setOnClickListener {
+            if(playerView?.isControllerFullyVisible==true) {
+                playerView?.hideController()
+            }
+            else {
+                playerView?.showController()
+            }
+        }
+
 
 
         playerView!!.setControllerVisibilityListener(StyledPlayerView.ControllerVisibilityListener { visibility ->
@@ -420,7 +429,13 @@ val v=player!!.currentTracks
             if (visibility == View.VISIBLE) {
                 //  GeneralUtils.showSystemUi(playerView!!)
                 // Because when using dpad controls, focus resets to first item in bottom controls bar
-                binding.videoView.findViewById<View>(R.id.exo_play_pause).requestFocus()
+                if (locked) {
+
+                }
+                else{
+
+                    binding.videoView.findViewById<View>(R.id.exo_play_pause).requestFocus()
+                }
             } else {
                 hideSystemUi(playerView!!)
             }
