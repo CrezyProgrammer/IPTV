@@ -13,6 +13,8 @@ class PlayersRepository @Inject constructor(
 ) {
 
     fun getAllRecords(query: String, id: Int)= db.channelDao.getAllChannels(query,id )
+    fun getAllRecords( id: Int)= db.channelDao.getAllChannels(id )
+    fun getAllChannels(id: Int)=db.channelDao.getAllChannels(id)
 
     suspend fun deletePlaylist(playlist: Playlist) {
         db.channelDao.deleteCategoryList(playlist.id)

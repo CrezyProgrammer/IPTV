@@ -18,3 +18,4 @@ rootProject.name = "IP TV"
 include ':app'
 include ':filepicker'
 include ':doubletapplayerview'
+include ':benchmark2'

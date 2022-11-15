@@ -14,7 +14,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.material3.DrawerState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.android.material.color.MaterialColors
 import com.leinardi.android.speeddial.compose.FabWithLabel
 import com.leinardi.android.speeddial.compose.SpeedDial
 import com.leinardi.android.speeddial.compose.SpeedDialState
@@ -46,7 +44,6 @@ import me.rosuh.filepicker.config.AbstractFileFilter
 import me.rosuh.filepicker.config.FilePickerManager
 import me.rosuh.filepicker.filetype.AudioFileType
 import java.net.URLEncoder
-import java.util.ArrayList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,23 +109,7 @@ fun HomeScreen(
     ) { scaffoldPadding -> ScaffoldContent(scaffoldPadding) }
 }
 
-@Composable
-fun DrawerContent() {
-    Column(Modifier.padding(8.dp)) {
-        Row(modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically) {
-            Text("Night Mode", fontWeight = FontWeight.Bold,fontSize =14.sp)
-            var checked by remember { mutableStateOf(true) }
-            Switch(
-                modifier = Modifier.semantics { contentDescription = "Demo" },
-                checked = checked,
-                onCheckedChange = { checked = it })
 
-        }
-    }
-}
 
 lateinit var isShowDialog : MutableState<Boolean>
 lateinit var viewModel: MainViewModel
@@ -270,7 +251,7 @@ fun ShowDialog(openDialog: MutableState<Boolean>) {
                                         playlistValue.value = ""
                                     },
                                 ) {
-                                    androidx.compose.material3.Icon(
+                                    Icon(
                                         Icons.Default.Clear,
                                         contentDescription = "",
                                         tint = Color.Black
@@ -296,7 +277,7 @@ fun ShowDialog(openDialog: MutableState<Boolean>) {
                                         url.value = ""
                                     },
                                 ) {
-                                    androidx.compose.material3.Icon(
+                                    Icon(
                                         Icons.Default.Clear,
                                         contentDescription = "",
                                         tint = Color.Black
@@ -403,8 +384,8 @@ fun ListItem(
                     modifier = Modifier
                         .weight(1f),
                     text =playlist.location,
-                    fontSize = 13.sp,
-                    color = Color.DarkGray)
+                    fontSize = 13.sp
+                )
                 Icon(Icons.Default.Edit, contentDescription ="Edit",
                     modifier = Modifier.clickable {
                         urlValue.value=playlist.title
@@ -439,7 +420,7 @@ fun ListItem(
                                                         urlValue.value = ""
                                                     },
                                                 ) {
-                                                    androidx.compose.material3.Icon(
+                                                    Icon(
                                                         Icons.Default.Clear,
                                                         contentDescription = ""
                                                     )
@@ -463,7 +444,7 @@ fun ListItem(
                                                         locationValue.value = ""
                                                     },
                                                 ) {
-                                                    androidx.compose.material3.Icon(
+                                                    Icon(
                                                         Icons.Default.Clear,
                                                         contentDescription = ""
                                                     )

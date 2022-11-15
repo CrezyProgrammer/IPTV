@@ -3,7 +3,7 @@ package com.masum.iptv.data.fileparser
 import android.content.Context
 import android.util.Log
 import com.masum.iptv.models.Channel
-import net.bjoernpetersen.m3u.M3uParser
+import com.masum.iptv.library.M3uParser
 import net.bjoernpetersen.m3u.model.M3uEntry
 import java.io.File
 import java.io.IOException
@@ -20,7 +20,7 @@ import kotlin.random.Random
         it.location.url.toString(),
             it.title.toString(),
             it.metadata["group-title"]?:"Unknown",
-            it.metadata["tvg-logo"]?:"https://upload.wikimedia.org/wikipedia/en/4/45/BabyTV.png",
+            it.metadata["tvg-logo"],
             id
         )
         list.add(channel)

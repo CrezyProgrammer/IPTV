@@ -17,12 +17,40 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="1403991446">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="192.168.0.100:5555" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Realme&#10; RMX1941" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="1525663584">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="192.168.0.124:5555" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="Realme&#10; RMX1941" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1702713053">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="192.168.0.100:5555" value="120" />
                   <entry key="Duration" value="90" />
                   <entry key="Realme&#10; RMX1941" value="120" />
                   <entry key="Tests" value="360" />

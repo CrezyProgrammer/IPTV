@@ -1,13 +1,9 @@
 package com.masum.iptv
 
-import android.net.Uri
-import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist
-import com.google.android.exoplayer2.source.hls.playlist.HlsPlaylistParser
-import com.google.android.exoplayer2.util.Util
+import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
+import com.masum.iptv.library.M3uParser
 import org.junit.Test
-import java.io.ByteArrayInputStream
-import java.io.InputStream
 
 
 /**
@@ -16,50 +12,84 @@ import java.io.InputStream
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        val playlistUri: Uri = Uri.parse("https://example.com/test.m3u8")
-        val playlistString = """
-            #EXTM3U
-            #EXT-X-VERSION:3
-            #EXT-X-PLAYLIST-TYPE:VOD
-            #EXT-X-START:TIME-OFFSET=-25
-            #EXT-X-TARGETDURATION:8
-            #EXT-X-MEDIA-SEQUENCE:2679
-            #EXT-X-DISCONTINUITY-SEQUENCE:4
-            #EXT-X-ALLOW-CACHE:YES
-            
-            #EXTINF:7.975,
-            #EXT-X-BYTERANGE:51370@0
-            https://priv.example.com/fileSequence2679.ts
-            
-            #EXT-X-KEY:METHOD=AES-128,URI="https://priv.example.com/key.php?r=2680",IV=0x1566B
-            #EXTINF:7.975,segment title
-            #EXT-X-BYTERANGE:51501@2147483648
-            https://priv.example.com/fileSequence2680.ts
-            
-            #EXT-X-KEY:METHOD=NONE
-            #EXTINF:7.941,segment title .,:/# with interesting chars
-            #EXT-X-BYTERANGE:51501
-            https://priv.example.com/fileSequence2681.ts
-            
-            #EXT-X-DISCONTINUITY
-            #EXT-X-KEY:METHOD=AES-128,URI="https://priv.example.com/key.php?r=2682"
-            #EXTINF:7.975
-            #EXT-X-BYTERANGE:51740
-            https://priv.example.com/fileSequence2682.ts
-            
-            #EXTINF:7.975,
-            https://priv.example.com/fileSequence2683.ts
-            
-            #EXTINF:2.002,
-            https://priv.example.com/fileSequence2684.ts
-            #EXT-X-ENDLIST
-            """.trimIndent()
-        val inputStream: InputStream = ByteArrayInputStream(Util.getUtf8Bytes(playlistString))
-        val playlist = HlsPlaylistParser().parse(playlistUri, inputStream)
 
-        val mediaPlaylist = playlist as HlsMediaPlaylist
-        assertThat(mediaPlaylist.version).isEqualTo(3);
+
+    private val COMMENT_START = '#'
+    private val EXTENDED_HEADER = "${COMMENT_START}EXTM3U"
+
+    private val EXTENDED_INFO =
+        """#EXTINF:(?:| )(?:| )([-]?\d+)(.*),(.+)"""
+
+    private val infoRegex = Regex(EXTENDED_INFO)
+
+    @Test
+    fun matchLine(){
+        val currentLine ="""#EXTINF:-1 tvg-id="ABTV.bd" tvg-logo="https://i.imgur.com/ytH4Ncu.png" group-title="General",AB TV (720p) [Not 24/7]
+https://cdn.appv.jagobd.com:444/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI/abtvusa.stream/playlist.m3u8"""
+        val newMatch = infoRegex.matchEntire(currentLine)
+        val testRegex=Regex("/group-title/")
+        val test=infoRegex.matchEntire(currentLine)
+        assert(newMatch==null)
+        assertThat(test).isEqualTo("tu")
+
+    }
+
+
+    @Test fun test()
+    {
+        val dummy=      """#EXTINF:(?:| )(?:| )([-]?\d+)(.*),(.+)"""
+        val currentLine ="#EXTINF:-1 tvg-id=\"ABTV.bd\" tvg-logo=\"https://i.imgur.com/ytH4Ncu.png\" group-title=\"General\",AB TV (720p) [Not 24/7]"
+            val date_pattern = "#EXTINF: ([-]?\\d+)(.*),(.+)"
+        val test = Regex(date_pattern).matchEntire(currentLine)
+
+
+        assertThat(test!=null).isTrue()
+
+
+    }    @Test
+    fun addition_isCorrect() {
+        val playlistString = """
+          #EXTM3U 
+
+          #EXTINF: -1 tvg-chno="1" tvg-logo="https://telegra.ph/file/56629885c4c8a71d6b097.png" group-title="𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐋𝐎𝐂𝐀𝐋 𝐈𝐏𝐓𝐕", 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 • ℓινє 1
+
+          https://playlist.localiptv.tk/Information_LIVE_1.m3u8
+
+          #EXTINF: -1 tvg-chno="2" tvg-logo="https://telegra.ph/file/56629885c4c8a71d6b097.png" group-title="𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐋𝐎𝐂𝐀𝐋 𝐈𝐏𝐓𝐕", 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 • ℓινє 2
+
+          https://playlist.localiptv.tk/Information_LIVE_2.m3u8
+
+          #EXTINF: -1 tvg-chno="3" tvg-logo="https://telegra.ph/file/56629885c4c8a71d6b097.png" group-title="𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐋𝐎𝐂𝐀𝐋 𝐈𝐏𝐓𝐕", 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 • ℓινє 3
+
+          https://playlist.localiptv.tk/Information_LIVE_3.m3u8
+
+          #EXTINF: -1 tvg-logo="https://telegra.ph/file/1a6235d583851e601c3a8.png" group-title="📺 (ʟɪᴠᴇ ɪᴘ ᴛᴠ sᴛᴏʀᴇ) 📺", 🇱 🇮 🇻 🇪 | ℓοϲαℓ ѕροяτѕ 1
+
+          https://playlist.localiptv.tk/LIVE_SPORTS_1.m3u8
+
+      
+
+          ---------------------------------------------
+
+          LOCAL IPTV LAST Update 15-09-22
+
+          #EXTINF:-1 tvg-logo="xxx" group-title="M3U FILE BY RIFAT HASAN join us TELEGRAM CHANNEL @Local_IPTV_STORE",
+
+          JOIN TELEGRAM CHANNEL: https://t.me/Local_IPTV_STORE
+
+          JOIN TELEGRAM CHANNEL:
+
+          https://t.me/Local_IPTV_SONY_LIV
+
+          JOIN TELEGRAM GROUP:
+
+          https://t.me/Local_IPTV_Discussion_GROUP
+
+            """.trimIndent()
+
+        val v2=com.masum.iptv.library.M3uParser.parse(playlistString)
+
+        assertThat(v2[0].toString()).contains("10");
+        assertThat(v2[0].metadata.entries.toString()).contains("1.0")
     }
 }

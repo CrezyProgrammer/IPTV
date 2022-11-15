@@ -15,7 +15,9 @@
         android:id="@+id/unlock_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
         android:layout_margin="16dp"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_lock_24dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -163,6 +165,7 @@
           android:layout_gravity="center"
           android:background="@android:color/transparent"
           android:gravity="end"
+          app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent">

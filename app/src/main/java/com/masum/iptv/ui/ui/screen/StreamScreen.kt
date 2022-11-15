@@ -44,25 +44,30 @@ val context = LocalContext.current
             .fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        "Network Stream",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
                 navigationIcon = {
-                    androidx.compose.material.IconButton(onClick = {
+                    IconButton(onClick = {
+
                         scope.launch { drawerState.open()}
+
                     }) {
-                        androidx.compose.material.Icon(
+                        Icon(
                             imageVector = Icons.Filled.Menu,
                             contentDescription = "Localized description"
                         )
                     }
-                }
+                },
+                title = {
+                    Text(
+                        //    style = MaterialTheme.typography.caption.copy(fontSize = 64.sp),
+                        text="Network Stream",
+
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
             )
         },
+
 
         floatingActionButton = {
             ExtendedFloatingActionButton(

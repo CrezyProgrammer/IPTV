@@ -2,13 +2,7 @@ package com.masum.iptv.ui
 
 import android.app.Activity
 import android.content.Intent
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -53,6 +47,7 @@ import com.masum.iptv.ui.ui.screen.StreamScreen
 import com.masum.iptv.ui.ui.theme.IPTVTheme
 import com.masum.iptv.ui.ui.theme.Pink80
 import com.masum.iptv.viewmodels.MainViewModel
+import com.tanodxyz.gdownload.GDownload
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import me.rosuh.filepicker.config.FilePickerManager
@@ -66,8 +61,9 @@ class HomeActivity : ComponentActivity() {
     lateinit var checked: MutableState<Boolean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         super.onCreate(savedInstanceState)
+        GDownload.init(lifecycle)
         setContent {
             MainScreenView()
         }
@@ -94,7 +90,6 @@ class HomeActivity : ComponentActivity() {
 
             val navController = rememberNavController()
             val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-            val scope = rememberCoroutineScope()
 
 
             Scaffold(
@@ -198,6 +193,7 @@ class HomeActivity : ComponentActivity() {
     })
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -263,6 +259,35 @@ class HomeActivity : ComponentActivity() {
                         },
                         modifier = Modifier.padding(horizontal = 12.dp),
                         selected =false)
+
+                    NavigationDrawerItem(
+                        icon = { Icon(Icons.Default.PrivacyTip, contentDescription = null) },
+                        label = {                               Text("Privacy Policy", fontWeight = FontWeight.Bold,fontSize =14.sp)
+                        },
+                        onClick = {
+                            scope.launch { drawerState.close()
+                                val url = "http://www.example.com"
+                                val i = Intent(Intent.ACTION_VIEW)
+                                i.data = Uri.parse(url)
+                                startActivity(i)
+                            }
+                        },
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        selected =false)
+                    NavigationDrawerItem(
+                        icon = { Icon(Icons.Default.Support, contentDescription = null) },
+                        label = {                Text("Telegram", fontWeight = FontWeight.Bold,fontSize =14.sp)
+                        },
+                        onClick = {
+                            scope.launch { drawerState.close() }
+                            val url = "http://www.example.com"
+                            val i = Intent(Intent.ACTION_VIEW)
+                            i.data = Uri.parse(url)
+                            startActivity(i)
+                        },
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                        selected =false)
+
 
                 }
             },

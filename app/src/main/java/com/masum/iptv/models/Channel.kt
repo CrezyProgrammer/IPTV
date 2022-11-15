@@ -10,6 +10,6 @@ data class Channel(
     @PrimaryKey(autoGenerate = false)
     val title:String,
     val category:String,
-    val logo:String,
+    val logo:String?,
     val playlistId:Int
 )

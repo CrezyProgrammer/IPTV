@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.masum.iptv.models.Channel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChannelDao {
@@ -19,7 +20,10 @@ suspend fun insertMultipleChannels(list: List<Channel>)
  suspend fun deleteCategoryList(id: Int)
 
 @Query("SELECT * FROM channels WHERE playlistId=:id AND category LIKE '%' || :query || '%'")
- fun getAllChannels(query: String, id: Int): LiveData<List<Channel>>
+ fun getAllChannels(query: String, id: Int): Flow<List<Channel>>
+
+@Query("SELECT * FROM channels WHERE playlistId=:id ")
+ fun getAllChannels( id: Int): Flow<List<Channel>>
  @Query("SELECT COUNT(id) from channels")
  suspend fun count(): Int
 }

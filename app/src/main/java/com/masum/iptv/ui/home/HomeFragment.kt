@@ -285,7 +285,6 @@ class HomeFragment : Fragment() {
             FilePickerManager.REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val list = FilePickerManager.obtainData()
-                   val channelList= ParseLocalFile(list[0], id!!)
                   //  insertList(channelList)
                     getCategoryList()
                     // do your work
